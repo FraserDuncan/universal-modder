@@ -38,14 +38,14 @@ tags: [mashup, boss, weapons, familiars, hud, asset-conversion, xnb, anm2, stb, 
   `um video`.
 
 ## Route and why
-Mashup pattern 1 (port the content into the host) + asset conversion. Isaac's Lua API covers everything in
-the brief: custom NPCs with Lua AI (bosses), custom collectibles and item pools, custom familiars, a HUD
+Mashup pattern 1 in `skills/mashup-mods/SKILL.md` (port the content into the host) + asset conversion.
+Isaac's Lua API covers everything in the brief: custom NPCs with Lua AI (bosses), custom collectibles and item pools, custom familiars, a HUD
 drawn in MC_POST_RENDER, keyboard input. Terraria as host was rejected because the user wanted Isaac's
 characters and runs. No decompiling of either game was needed.
 
 ## How the game works (what we had to learn)
-- **Entity types.** Custom NPCs use an unused type id (790; vanilla NPC types end at 967, effects are 1000)
-  with explicit variants; `Isaac.GetEntityTypeByName` / `GetEntityVariantByName` resolve them. Types >= 10
+- **Entity types.** Custom NPCs use a type id vanilla doesn't use (790; vanilla types jump from 413 to 801,
+  effects are 1000) with explicit variants; `Isaac.GetEntityTypeByName` / `GetEntityVariantByName` resolve them. Types >= 10
   are EntityNPC; type 3 = familiar, 1000 = effect.
 - **Boss replacement.** `MC_PRE_ENTITY_SPAWN(type, variant, subtype, pos, vel, spawner, seed)` returning
   `{790, v, 0, seed}` replaces the vanilla boss before its init, for room-placed bosses and console `spawn`.
@@ -164,25 +164,28 @@ characters and runs. No decompiling of either game was needed.
     presses shorter than a tick. **Fix:** edge-detect `IsButtonPressed` in MC_POST_RENDER.
 18. **A sprite sheet that is a grid, not a strip** (Moon Lord's head, 573x804 = 3x3) shows three heads if
     cut as a vertical strip. Count transparent row gaps and columns before writing the anm2.
-19. **`debug 3` toggles**; calling it again on the next floor turns god mode off.
-20. **Spawning a test boss in a room with pits** puts Isaac in a pit and respawns him at the door, so the
+19. **Spawning a test boss in a room with pits** puts Isaac in a pit and respawns him at the door, so the
     screenshot shows no boss; test in plain rooms.
-21. **Game hangs at file select, no log line, right after "Loading GameState".** Looks like a corrupt
+20. **Game hangs at file select, no log line, right after "Loading GameState".** Looks like a corrupt
     save; it is not. **Cause:** a 256x256 override of `gfx/ui/completion_widget.png` (the vanilla size
     in Repentance). **Fix:** make it 512x512 with the marks at their original coordinates in the
     top-left quadrant; `completion_widget_pause.png` is fine at 256. Bisect by setting `EnableMods=0`,
     then removing overrides one at a time.
-22. **Title-screen sheet override ignored.** `gfx/ui/main menu/titlemenu.png` (and `_2`, `_3`, all three
+21. **Title-screen sheet override ignored.** `gfx/ui/main menu/titlemenu.png` (and `_2`, `_3`, all three
     referenced by the exe) in a mod's `resources/` changed nothing on Repentance+. **Cause:** the title
     is drawn through an anm2 the mod did not provide, and that one resolves its sheet elsewhere.
-    **Fix:** ship the vanilla `titlemenu.anm2` (it names `TitleMenu.png`) next to the PNG; then the
-    override draws. The logo is the strip at (0,272) 480x111 of the 480x540 sheet.
+    **Fix:** put a copy of the vanilla `titlemenu.anm2` from your own install (it names `TitleMenu.png`)
+    next to the PNG; then the override draws. It's a game file: copy it in at build time like the Terraria
+    assets, and keep it out of the repo and any upload. The logo is the strip at (0,272) 480x111 of the
+    480x540 sheet.
 
 ## Assets
 All Terraria art and sound converted locally from the player's install by `tools/import_terraria.py`
 (xnbcli unpack -> PNG/WAV, Pillow re-save, 32x32 nearest-neighbour icons from the item sprites, sizes.json
 for the anm2 generator). Portraits are cut from the same sheets. The only committed art is the two hotbar
-slot PNGs drawn with Pillow. No fal calls (the key had expired).
+slot PNGs drawn with Pillow. No fal calls (the key had expired). The mod folder holds the converted
+Terraria files, so don't upload it to the Workshop as it is: share the code and the importer, and let each
+player convert from their own Terraria install.
 
 ## Cost and time
 One session, about 1 h 45 min wall clock from recon to showcase, most of it on the two invisible-sprite
