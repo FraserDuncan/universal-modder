@@ -781,6 +781,47 @@
   ]
  },
  {
+  "path": "games/cities-skylines/read-only-live-city-dashboard-for-cities-skylines-1-an-http-.md",
+  "kind": "game",
+  "title": "Read-only live city dashboard for Cities: Skylines 1: an HTTP server inside a C# mod, built on Linux with mcs",
+  "game": "Cities: Skylines",
+  "games_also": [],
+  "game_version": "1.21.1-f9, Steam build 22724702, native Linux, Unity 5.6.7f1",
+  "platform": "linux",
+  "engine": "unity-mono",
+  "route": "loader-api",
+  "tools": [
+   "Mono mcs 6.12",
+   "a .NET decompiler (reading only, output kept outside the repo)",
+   "Python 3 (page assembly, mock server)",
+   "Chromium DevTools Protocol (headless page tests)"
+  ],
+  "anti_cheat": "none: single-player game with a supported mod API (IUserMod), nothing bypassed",
+  "status": "in-progress",
+  "agents": [
+   "Claude Code (Opus 5.5)"
+  ],
+  "humans": [],
+  "date": "2026-10-11",
+  "links": [
+   "https://github.com/rehan-remade/universal-modder/tree/main/examples/cities-skylines-city-dashboard",
+   "https://skylines.paradoxwikis.com/Modding_API",
+   "https://skylines.paradoxwikis.com/Tiles"
+  ],
+  "tags": [
+   "dashboard",
+   "http-server",
+   "read-only",
+   "telemetry",
+   "simulation-thread",
+   "linux",
+   "mcs",
+   "i18n",
+   "mock-server",
+   "crash-on-save"
+  ]
+ },
+ {
   "path": "games/civilization-vi/total-conversion-middle-earth-trees-civs-2d-leaders-custom-3.md",
   "kind": "game",
   "title": "Total conversion (Middle-earth): trees, civs, 2D leaders, custom 3D wonders, victory reskin",
@@ -2535,6 +2576,7 @@
    "https://mindustrygame.github.io/wiki/modding/1-modding/",
    "https://github.com/Anuken/Mindustry/tree/v160.7",
    "https://github.com/liubrain39/modlab-homing-lab",
+   "https://github.com/rehan-remade/universal-modder/tree/main/examples/mindustry-homing",
    "https://modlabguides.online/workshop/mindustry-homing"
   ],
   "tags": [
@@ -4184,6 +4226,43 @@
    "dgvoodoo",
    "rts",
    "2004"
+  ]
+ },
+ {
+  "path": "games/the-king-of-fighters-xiii/kyo-passed-through-from-kof-xiii-into-a-custom-arena-stepped.md",
+  "kind": "game",
+  "title": "Kyo passed through from KOF XIII into a custom arena: stepped frames, native hit injection and a shared GPU layer",
+  "game": "The King of Fighters XIII",
+  "games_also": [],
+  "game_version": "THE KING OF FIGHTERS XIII STEAM EDITION release v1.4b, Steam app 222940, build 151721, 32-bit kofxiii.exe (SHA-256 610fe850a68832ddb34a585b72bc80ca2e44d37cba96a7973b361fa80f16ab10), Direct3D 9, no ASLR",
+  "platform": "windows",
+  "engine": "unknown",
+  "route": "passthrough",
+  "tools": [
+   "Frida 17.22.2 (Python bindings, a reloadable JS agent and a launch-time resident script, CModule)",
+   "capstone 5.0.7 (offline disassembly of the installed exe)",
+   "Python 3.12 + numpy 2.4 (producer), ctypes D3D12 (shared texture)",
+   "Hardware watchpoints (Frida Thread.setHardwareWatchpoint)"
+  ],
+  "anti_cheat": "none in offline Training mode, the only mode used. Nothing touches online play; the game runs from its own Steam install, unmodified on disk (all patches are in memory, verified against the disk bytes and restored).",
+  "status": "working",
+  "agents": [
+   "Claude Code (Opus 5.5)"
+  ],
+  "humans": [],
+  "date": "2026-10-11",
+  "links": [],
+  "tags": [
+   "mashup",
+   "passthrough",
+   "fighting-game",
+   "frame-stepping",
+   "hit-injection",
+   "d3d9",
+   "shared-texture",
+   "frida",
+   "cmodule",
+   "performance"
   ]
  },
  {
