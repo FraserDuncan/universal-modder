@@ -417,6 +417,7 @@ KNOWN = {
 KNOWN_FILES = [
     ("dwarf fortress", ("data/vanilla/*/info.txt", "dwarf fortress.exe", "dwarfort")),
     ("mindustry", ("mindustry.exe", "mindustry.json", "mindustry.jar", "mindustry.app/contents/resources/desktop.jar")),
+    ("the binding of isaac: rebirth", ("isaac-ng.exe",)),
 ]
 
 # save/profile folders that don't follow the game's name ({profile}, {documents}, {appdata}, {localappdata})

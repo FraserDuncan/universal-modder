@@ -110,8 +110,9 @@ for what vanilla hides (XML data at runtime, ImGui, extra callbacks, unlocks for
   and resized several: the title logo is its own `logo.png`, the completion-mark sheets are 384x384).
   Extract the vanilla sheet and keep its size; bisect hangs with `EnableMods=0`.
 - `MC_EXECUTE_CMD(cmd, args)` is the documented way to add console commands (skips built-ins; any non-nil
-  return crashes). On 1.9.7.17 it did not fire for any custom name, typed or via `Isaac.ExecuteCommand`,
-  with the handler registered *(verified)*. Use `lua <code>` or a command file instead.
+  return crashes). In the session behind this page (1.9.7.17) it never fired for a custom name, typed or via
+  `Isaac.ExecuteCommand`, although the handler was registered *(verified)*; the cause wasn't found. Test it
+  once before relying on it, and fall back to `lua <code>` or a command file if it stays silent.
 - Input: `Input.IsButtonTriggered` is consumed by the first call per update and missed automated short
   presses in a 30/s callback; edge-detect `Input.IsButtonPressed` in `MC_POST_RENDER` when it matters.
 - `Isaac.DebugString` truncates at about 10 KB; `log.txt` is wiped each launch and shows nothing on a
@@ -132,7 +133,7 @@ for what vanilla hides (XML data at runtime, ImGui, extra callbacks, unlocks for
 and `'` or `@` for UK; on a UK keyboard VK 0xDF (the key left of 1) also opened it *(verified)*. `luamod
 <folder>` re-runs the mod's Lua and `clearcache` reloads sprites; both close the console, so reopen it
 before typing more or the text becomes WASD movement. XML changes need a restart. Useful: `lua <code>`,
-`restart [character]`, `stage 1-13[a-d]`, `goto s.boss.<variant>` / `d.<n>` / `x.<type>.<variant>`,
+`restart [character]`, `stage 1-13[a-d]`, `goto s.boss.<variant>` / `d.<n>` / `x.<room type>.<variant>`,
 `spawn t.v.s`, `giveitem c15`, `reseed`, `debug 3` (god mode; the flags toggle), `testbosspool`, `copy`
 (last three commands to the clipboard). `Isaac.ExecuteCommand` runs the same from Lua. `--luadebug` unlocks
 `io`, `os`, `debug` and unsandboxed `require` for every mod, which IsaacDocs warns can compromise the
