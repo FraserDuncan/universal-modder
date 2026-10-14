@@ -14,7 +14,8 @@ repo, they almost always want to **mod a game**, or to learn how a game was modd
 
 ## Tools
 - **`bin/um`** is the Python CLI, and it sets itself up with `uv`.
-  - Put it on PATH: `export PATH="$PWD/bin:$PATH"`, or install it anywhere with
+  - Put it on PATH: `export PATH="$PWD/bin:$PATH"` (from Windows cmd or PowerShell, add `bin` to PATH and
+    `bin\um.cmd` runs it), or install it anywhere with
     `uv tool install git+https://github.com/rehan-remade/universal-modder`.
   - Every group has `--help`:
     - `scan`: installed games, engine, anti-cheat, loaders, saves, routes
