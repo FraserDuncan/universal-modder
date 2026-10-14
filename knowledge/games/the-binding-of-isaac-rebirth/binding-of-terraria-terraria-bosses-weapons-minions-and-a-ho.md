@@ -63,8 +63,8 @@ characters and runs. No decompiling of either game was needed.
 - **Completion marks** are 16x16 cells in `gfx/ui/completion_widget.png` and `completion_widget_pause.png`
   (384x384 on Repentance+; one row per difficulty, red at y=96 and dark at y=112: Polaroid 0, Negative
   16, Cross 32, Upside-down cross 48, Heart 64, Star 80, Mega Satan 96 and 112, Hush 128, Greed 144, then
-  three newer marks; gotcha 20 has the Repentance layout). A plain PNG override in the mod's resources
-  changes them.
+  three newer marks). A plain PNG override in the mod's resources changes them, as long as it keeps that
+  size and layout (gotcha 20).
 - **Player look-alikes without touching the player anm2**: hide the body with `player.Color =
   Color(1,1,1,0,0,0,0)` each MC_POST_PLAYER_UPDATE (costumes go with it) and draw your own `Sprite` in
   MC_POST_PLAYER_RENDER at `Isaac.WorldToScreen(player.Position)`; nothing else in the game cares.
@@ -133,10 +133,12 @@ characters and runs. No decompiling of either game was needed.
    as WASD movement. Reopen the console after each.
 5. **Console key on a UK keyboard is VK 0xDF (OEM_8)**, the key left of 1, not 0xC0. The first character
    typed after reopening sometimes becomes a stray space; send a Backspace first.
-6. **`MC_EXECUTE_CMD` never fires on Repentance+ (v1.9.7.17).** Not a name collision: `bot`, `terraria`
-   and `botx` typed in the console all just print the console's command list, `Isaac.ExecuteCommand("botx
-   1")` from Lua is silent too, and `Isaac.GetCallbacks(ModCallbacks.MC_EXECUTE_CMD)` shows the handler
-   registered. `lua <code>` works, and so does `Isaac.ExecuteCommand` for the game's own commands.
+6. **`MC_EXECUTE_CMD` never fired for us on Repentance+ (v1.9.7.17).** Not a name collision: `bot`,
+   `terraria` and `botx` typed in the console all just print the console's command list,
+   `Isaac.ExecuteCommand("botx 1")` from Lua is silent too, and
+   `Isaac.GetCallbacks(ModCallbacks.MC_EXECUTE_CMD)` shows the handler registered. IsaacDocs still says the
+   callback is skipped only for the game's own commands. `lua <code>` works, and so does
+   `Isaac.ExecuteCommand` for the game's own commands.
 7. **Launching isaac-ng.exe directly with `--luadebug` blocks every later Steam launch.** Steam holds a
    hidden "launch with arguments?" dialog (`LaunchApp waiting for user response to ShowGameArgs` in
    Steam's console_log.txt). Fix: `steam.exe -shutdown`, start Steam again, launch through Steam.
@@ -174,7 +176,7 @@ characters and runs. No decompiling of either game was needed.
     screenshot shows no boss; test in plain rooms.
 20. **Game hangs at file select, no log line, right after "Loading GameState".** Looks like a corrupt
     save; it is not. **Cause:** a 256x256 override of `gfx/ui/completion_widget.png` (Repentance's size
-    and layout). Repentance+'s sheet is 384x384 with a new layout, 13 marks in one row (red/hard at
+    and layout). Repentance+'s sheet is 384x384 with a new layout, 13 cells in one row (red/hard at
     y=96, dark at y=112, x=0..192: Polaroid, Negative, Cross, upside-down Cross, Heart, Star, two Mega
     Satan cells, Hush at 128, Greed at 144, three newer marks) and more paper variants, so its anm2
     crops past 256 px. Padding the 256 sheet to 512 stopped the hang but lost the character-select paper.
@@ -185,11 +187,12 @@ characters and runs. No decompiling of either game was needed.
     `resources/` changed nothing on Repentance+. **Cause:** Rep+ no longer keeps the logo in that sheet. Its
     `titlemenu.anm2` (extract it, gotcha 13) has `Logo` and `LogoShadow` layers that read
     `gfx/ui/main menu/logo.png` (480x320: logo in rows 0-159, its blurred shadow in rows 160-319);
-    `titlemenu.png` only holds the background. The first fix, shipping the 1.7.9b `titlemenu.anm2` from a
-    community mirror, only worked because that older anm2 still crops the logo from `titlemenu.png` at
-    (0,272) 480x111. **Fix:** override `logo.png` alone, no anm2: keep "THE BINDING OF" from the vanilla top
-    rows, paste your logo below, blur a grey copy into the bottom half. Verified on v1.9.7.17; nothing
-    from the game is shipped or downloaded.
+    `titlemenu.png` only holds the background. This gotcha's earlier fix, an older (1.7.9b) `titlemenu.anm2`
+    next to the PNG, only worked because that version still crops the logo from `titlemenu.png` at (0,272)
+    480x111; don't use one. **Fix:** override `logo.png` alone, no anm2: keep "THE BINDING OF" from the
+    vanilla top rows, paste your logo below, blur a grey copy into the bottom half. Verified on v1.9.7.17.
+    The generator reads the vanilla `logo.png` from your own extraction (gotcha 13), so nothing from the
+    game is committed or downloaded.
 
 ## Assets
 All Terraria art and sound converted locally from the player's install by `tools/import_terraria.py`
@@ -198,8 +201,8 @@ for the anm2 generator). Portraits are cut from the same sheets. The vanilla Isa
 generators start from (`logo.png`, `completion_widget.png`, `charactermenu.png`) are read from
 `<game>/extracted_resources` (gotcha 13), not downloaded. The only committed art is the two hotbar
 slot PNGs drawn with Pillow. No fal calls (the key had expired). The mod folder holds the converted
-Terraria files, so don't upload it to the Workshop as it is: share the code and the importer, and let each
-player convert from their own Terraria install.
+Terraria files and the UI sheets built from Isaac's own, so don't upload it to the Workshop as it is: share
+the code and the importer, and let each player build from their own installs.
 
 ## Cost and time
 One session, about 1 h 45 min wall clock from recon to showcase, most of it on the two invisible-sprite
